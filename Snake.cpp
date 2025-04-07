@@ -37,10 +37,16 @@ struct Snake : public NonBlockingGame {
   // keep an element to represent something the snake would consume to grow,
   // for instance, an apple and keep track of the snake head (both will be elements of
   // type Block
+  Block fruit;
+
+  Block* head = new Block;
 
 
   // keep track of snake direction (can move in all 4 directions, its last direction
   // and current direction
+  
+  enum Direction {
+
 
   int frame = 0;
 
