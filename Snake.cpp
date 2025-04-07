@@ -55,7 +55,7 @@ struct Snake : public NonBlockingGame {
   };
 
   Direction currDir = UP;
-  Direction prevDir = UP;
+  Direction prevDir = UP; //Not sure what to use this for...
 
   int frame = 0;
 
@@ -73,6 +73,7 @@ struct Snake : public NonBlockingGame {
     // perform all initializations, place the apple
 	head = new Block(15, 15);
 	plantApple();
+	//TODO: Initialize colors
 
     paint();
   }
@@ -99,7 +100,46 @@ struct Snake : public NonBlockingGame {
 
     // Move the snake one position, based on its direction and update
     // the linked list
+	
+	//Kerney said we just need to add a new one onto the front and remove the one at the back
+	Block* temp = new Block(head->x, head->y);
+	temp->next = head;
+	head = temp;
 
+	if (currDir == UP) {
+		head->y -= 1;
+	}
+	if (head->y < 0) {
+		head->y = 29;
+	}
+	if (currDir == RIGHT) {
+		head->x += 1;
+	}
+	if (head->x > 29) {
+		head->x = 0;
+	}
+	if (currDir == DOWN) {
+		head->y += 1;
+	}
+	if (head->y > 29) {
+		head->y = 0;
+	}
+	if (currDir == LEFT) {
+		head->x -= 1;
+	}
+	if (head->x < 0) {
+		head->x = 29;
+	}
+
+	for (Block* segment = head; segment != nullptr; segment = segment->next) {
+		if (segment->next = nullptr) {
+			delete segment;
+			break;
+		}
+	}
+
+	detectDeath();
+	detectApple();
 
     // handle edge cases - check to make sure the snake
     // doesnt go off the edge of the board; can do a wrap around
