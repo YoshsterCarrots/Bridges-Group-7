@@ -28,6 +28,13 @@ class Block {
       this->x = x;
       this->y = y;
     }
+
+	~Block() {
+		if (next != nullptr) {
+			delete next;
+		}
+		delete this;
+	}
 };
 
 struct Snake : public NonBlockingGame {
@@ -37,10 +44,18 @@ struct Snake : public NonBlockingGame {
   // keep an element to represent something the snake would consume to grow,
   // for instance, an apple and keep track of the snake head (both will be elements of
   // type Block
-
+  Block fruit;
+  Block* head;
 
   // keep track of snake direction (can move in all 4 directions, its last direction
   // and current direction
+  
+  enum Direction {
+	  UP, RIGHT, DOWN, LEFT
+  };
+
+  Direction currDir = UP;
+  Direction prevDir = UP;
 
   int frame = 0;
 
@@ -56,12 +71,27 @@ struct Snake : public NonBlockingGame {
 
     // create the snake of some number of elements,
     // perform all initializations, place the apple
+	head = new Block(15, 15);
+	plantApple();
 
     paint();
   }
 
   void handleInput() {
     // Use the 4 arrow keys to move the snake in a particular direction
+	prevDir = currDir;
+	if (keyUp() || keyW()) {
+		currDir = UP;
+	}
+	else if (keyRight() || keyD()) {
+		currDir = RIGHT;
+	}
+	else if (keyDown() || keyS()) {
+		currDir = DOWN;
+	}
+	else if (keyLeft() || keyA()) {
+		currDir = LEFT;
+	}
   }
 
   // update snake position
