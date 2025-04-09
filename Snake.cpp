@@ -2,6 +2,7 @@
 #include <iostream>
 #include <time.h>
 #include <vector>
+#include <cstdlib>
 
 
 //
@@ -44,8 +45,8 @@ struct Snake : public NonBlockingGame {
   // keep an element to represent something the snake would consume to grow,
   // for instance, an apple and keep track of the snake head (both will be elements of
   // type Block
-  Block fruit;
   Block* head;
+  Block apple;
 
   // keep track of snake direction (can move in all 4 directions, its last direction
   // and current direction
@@ -71,6 +72,8 @@ struct Snake : public NonBlockingGame {
 
     // create the snake of some number of elements,
     // perform all initializations, place the apple
+	srand(time(0));
+
 	head = new Block(15, 15);
 	plantApple();
 	//TODO: Initialize colors
@@ -131,6 +134,8 @@ struct Snake : public NonBlockingGame {
 		head->x = 29;
 	}
 
+	detectApple();
+
 	for (Block* segment = head; segment != nullptr; segment = segment->next) {
 		if (segment->next = nullptr) {
 			delete segment;
@@ -139,7 +144,6 @@ struct Snake : public NonBlockingGame {
 	}
 
 	detectDeath();
-	detectApple();
 
     // handle edge cases - check to make sure the snake
     // doesnt go off the edge of the board; can do a wrap around
@@ -151,18 +155,40 @@ struct Snake : public NonBlockingGame {
   void plantApple() {
     // randomly position the apple, taking care to ensure that it doesnt
     // intersect with the snake position.
+	apple.x = rand() % 30;
+	apple.y = rand() % 30;
+	for (Block* segment = head; segment != nullptr; segment = segment->next) {
+		if (apple.x == segment->x && apple.y == segment->y) {
+			plantApple();
+			break;
+		}
+	}
   }
 
   // check if snake has found the apple
   void detectApple() {
     // if apple is found, snake consumes it and update the board and plant
-    // a new apple on the board.
+    // a new apple on the board.	
+	if (apple.x == head->x && apple.y == head->y) {
+		for (Block* segment = head; segment != nullptr; segment = segment->next) {
+			if (segment->next == nullptr) {
+				Block* temp = new Block(segment->x, segment->y);
+				plantApple();
+			}
+		}
+	}
   }
 
 
   // check if snake ate itself! Yuk!
   void detectDeath() {
-
+	for (Block* segment = head->next; segment != nullptr; segment = segment->next) {
+		if (head->x == segment->x && head->y == segment->y) {
+			//Any other stuff we want to do before game over goes here
+			delete head;
+			quit();
+		}
+	}
   }
 
 
@@ -178,6 +204,11 @@ struct Snake : public NonBlockingGame {
   // keep the frame counter
   // and perform updates every n frames or so.
   virtual void gameLoop() override {
+	  //initialize();
+	  handleInput();
+	  updatePosition();
+	  paint();
+
   }
 };
 
