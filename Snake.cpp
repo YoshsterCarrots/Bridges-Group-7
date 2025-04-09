@@ -76,7 +76,7 @@ struct Snake : public NonBlockingGame {
 
 	head = new Block(15, 15);
 	plantApple();
-	//TODO: Initialize colors
+	//TODO: Initialize colors?
 
     paint();
   }
@@ -215,7 +215,7 @@ struct Snake : public NonBlockingGame {
 // Initialize your game
 // Call your game class with your assignment id, username, and api key
 int main (int argc, char** argv) {
-  Snake g(122, "BRIDGES_USER_ID", "BRIDGES_API_KEY");
+  Snake g(1, "Yoshster", "1011562928710");
   
   
   g.start();
