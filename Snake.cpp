@@ -167,11 +167,19 @@ struct Snake : public NonBlockingGame {
 
 
   // redraw
-  void paint() {
-
-    // draw the board, the apple and the snake
-    // make sure to choose colors so that snake and apple are clearly visible.
-  }
+  void paint() {	
+	for (int height = 0; height < 30; height++) {
+		for (int width = 0; width < 30; width++) {
+			setBG(height,width,NamedColor::lightgreen);
+			}
+		}
+	drawSymbol(apple->y,applexNamedSymbol::apple,NamedColor::red);
+	Block *temp = head;
+	while (temp) {
+		setBGColor(temp->y, temp->x, NamedColor::mediumblue);
+		temp = temp->next;
+  		}
+	}
 
   // handle input, check if apple was detected, update position, redraw,
   // detect if snake ate itself. To adjust speed of game and make it playable,
