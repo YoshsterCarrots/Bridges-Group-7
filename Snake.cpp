@@ -3,6 +3,7 @@
 #include <time.h>
 #include <vector>
 #include <cstdlib>
+#include <unistd.h>
 
 
 //
@@ -39,7 +40,7 @@ class Block {
 };
 
 struct Snake : public NonBlockingGame {
-  long frameTime;
+  long frameTime = getFrameRate();
   long nextFrameTime;
 
   // keep an element to represent something the snake would consume to grow,
@@ -76,7 +77,6 @@ struct Snake : public NonBlockingGame {
 
 	head = new Block(15, 15);
 	plantApple();
-	//TODO: Initialize colors?
 
     paint();
   }
@@ -185,6 +185,7 @@ struct Snake : public NonBlockingGame {
 	for (Block* segment = head->next; segment != nullptr; segment = segment->next) {
 		if (head->x == segment->x && head->y == segment->y) {
 			//Any other stuff we want to do before game over goes here
+			cout << "Game over, buddy." << endl;
 			delete head;
 			quit();
 		}
@@ -196,23 +197,23 @@ struct Snake : public NonBlockingGame {
   void paint() {	
 	for (int height = 0; height < 30; height++) {
 		for (int width = 0; width < 30; width++) {
-			setBG(height,width,NamedColor::lightgreen);
-			}
+			setBGColor(height, width, NamedColor::lightgreen);
 		}
-	drawSymbol(apple->y,applexNamedSymbol::apple,NamedColor::red);
-	Block *temp = head;
-	while (temp) {
-		setBGColor(temp->y, temp->x, NamedColor::mediumblue);
-		temp = temp->next;
-  		}
 	}
+
+	drawSymbol(apple.y, apple.x, NamedSymbol::apple, NamedColor::red);
+
+	for (Block* segment = head; segment != nullptr; segment = segment->next) {
+		setBGColor(segment->y, segment->x, NamedColor::mediumblue);
+  	}
+  }
 
   // handle input, check if apple was detected, update position, redraw,
   // detect if snake ate itself. To adjust speed of game and make it playable,
   // keep the frame counter
   // and perform updates every n frames or so.
   virtual void gameLoop() override {
-	  //initialize();
+	  usleep(1000000); //Temporary value
 	  handleInput();
 	  updatePosition();
 	  paint();
