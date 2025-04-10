@@ -60,7 +60,7 @@ struct Snake : public NonBlockingGame {
 	};
 
 	Direction currDir = UP;
-	Direction prevDir = UP; //Not sure what to use this for...
+	Direction prevDir = UP;
 
 	int frame = 0;
 
@@ -89,14 +89,13 @@ struct Snake : public NonBlockingGame {
 
 	void handleInput() {
 		// Use the 4 arrow keys to move the snake in a particular direction
-		prevDir = currDir;
-		if ((keyUp() || keyW()) && currDir != DOWN) {
+		if ((keyUp() || keyW()) && prevDir != DOWN) {
 			currDir = UP;
-		} else if ((keyRight() || keyD()) && currDir != LEFT) {
+		} else if ((keyRight() || keyD()) && prevDir != LEFT) {
 			currDir = RIGHT;
-		} else if ((keyDown() || keyS()) && currDir != UP) {
+		} else if ((keyDown() || keyS()) && prevDir != UP) {
 			currDir = DOWN;
-		} else if ((keyLeft() || keyA()) && currDir != RIGHT) {
+		} else if ((keyLeft() || keyA()) && prevDir != RIGHT) {
 			currDir = LEFT;
 		}
 	}
@@ -123,6 +122,8 @@ struct Snake : public NonBlockingGame {
 			}
 		}
 		*/
+
+		prevDir = currDir;
 
 		for (Block* segment = tail; segment != head; segment = segment->prev){
 			segment->x = segment->prev->x;
